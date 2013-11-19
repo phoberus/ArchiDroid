@@ -1,3 +1,3 @@
-post-build=samsung/m0xx/m0:4.1.1/JRO03C/I9300XXDLIB:user/release-keys
-post-timestamp=1384349273
-pre-device=m0
+post-build=google/occam/mako:4.3/JLS36C/573038:user/release-keys
+post-timestamp=1384682685
+pre-device=mako
