@@ -3,9 +3,6 @@
 #
 ui_print(">>> ArchiDroid is now loading...");
 sleep (1);
-assert(getprop("ro.product.device") == "m0" || getprop("ro.build.product") == "m0" || 
-       getprop("ro.product.device") == "i9300" || getprop("ro.build.product") == "i9300" || 
-       getprop("ro.product.device") == "GT-I9300" || getprop("ro.build.product") == "GT-I9300" || abort("This package is for \"m0,i9300,GT-I9300\" devices; this is a \"" + getprop("ro.product.device") + "\"."););
 ui_print("<b><#ff0000>root</#><#ecec36>@</#><#0cdfdf>ArchiDroid</#><#ecec36>:~</#><#c00cdf>#</#></b> Ready!");
 set_progress(0.01);
 sleep (2);
@@ -15,7 +12,7 @@ assert(unmount("/system") || ui_print("(system is unmounted already)"));
 set_progress(0.02);
 
 if file_getprop("/tmp/aroma-data/archidroidwipe.prop","wipe") == "no" then
-	mount("ext4", "EMMC", "/dev/block/mmcblk0p9", "/system");
+	mount("ext4", "EMMC", "/dev/block/platform/msm_sdcc.1/by-name/system", "/system");
 	package_extract_file("system/bin/backuptool.sh", "/tmp/backuptool.sh");
 	package_extract_file("system/bin/backuptool.functions", "/tmp/backuptool.functions");
 	set_perm(0, 0, 0777, "/tmp/backuptool.sh");
@@ -27,12 +24,15 @@ endif;
 set_progress(0.03);
 
 ui_print("<b><#ff0000>root</#><#ecec36>@</#><#0cdfdf>ArchiDroid</#><#ecec36>:~</#><#c00cdf>#</#></b> Formatting Partitions");
-format("ext4", "EMMC", "/dev/block/mmcblk0p9", "0", "/system");
+format("ext4", "EMMC", "/dev/block/platform/msm_sdcc.1/by-name/system", "0", "/system");
 
 set_progress(0.06);
 
 ui_print("<b><#ff0000>root</#><#ecec36>@</#><#0cdfdf>ArchiDroid</#><#ecec36>:~</#><#c00cdf>#</#></b> Mounting Partitions");
-assert(mount("ext4", "EMMC", "/dev/block/mmcblk0p9", "/system") || ui_print("(system is mounted already)"));
+assert(mount("ext4", "EMMC", "/dev/block/platform/msm_sdcc.1/by-name/system", "/system") || ui_print("(system is mounted already)"));
+
+# This shouldn't be required
+assert(mount("ext4", "EMMC", "/dev/block/platform/msm_sdcc.1/by-name/userdata", "/data") || ui_print("(data is mounted already)"));
 
 set_progress(0.07);
 #package_extract_file("_archidroid/scripts/bash", "/tmp/bash");
@@ -272,7 +272,7 @@ set_progress(0.54);
 
 # We need to make sure that current kernel is CM-based to prevent random zygote kernel panics
 ui_print("<b><#ff0000>root</#><#ecec36>@</#><#0cdfdf>ArchiDroid</#><#ecec36>:~</#><#c00cdf>#</#></b> Cleaning Old Kernel");
-package_extract_file("boot.img", "/dev/block/mmcblk0p5");
+package_extract_file("boot.img", "/dev/block/platform/msm_sdcc.1/by-name/boot");
 
 ### TEMASEK ###
 if file_getprop("/tmp/aroma-data/archidroid.prop","kernel") == "temasek" then
